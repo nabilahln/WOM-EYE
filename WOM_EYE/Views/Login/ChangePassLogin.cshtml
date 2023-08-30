@@ -1,0 +1,173 @@
+﻿@model WOM_EYE.DTOs.Auth.ChangePasswordDTO
+
+@{
+
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+    //ViewData["responseMessage"] = Model.responseMessage;
+
+}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+
+    <!-- Custom fonts for this template-->
+    <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="~/css/sb-admin-2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css" />
+</head>
+
+<body class="bg-gradient-primary">
+
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-9">
+
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+
+                        <div class="col-lg-12">
+                            <div class="p-5">
+
+
+
+                                <div class="mb-5">
+                                    <img src="~/womeye3.png" class="rounded mx-auto d-block" alt="womeye" style="width:150px; height:150px; margin-bottom:0px; margin-top:0px;">
+
+                                </div>
+
+                                <!-- Form Login -->
+                                <form asp-action="ChangePassLogin" method="post" asp-controller="Login">
+
+                                    <!-- Input Hidden UserId-->
+                                    <input asp-for="userId" type="hidden" name="userId" id="userId" style="border-radius:10rem;" />
+
+                                    <!-- Password Old-->
+                                    <div class="form-group row">
+                                        <label asp-for="passOld" class="col-sm-2 col-form-label">Password Lama</label>
+                                        <div class="col-sm-10">
+                                            <input asp-for="passOld" type="password" class="form-control" id="passOld" name="passOld" placeholder="Write your old password" style="border-radius:10rem;">
+                                            <span asp-validation-for="passOld" class="text-danger"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Password New-->
+                                    <div class="form-group row">
+                                        <label asp-for="passNew" class="col-sm-2 col-form-label">Password Baru</label>
+                                        <div class="col-sm-10">
+                                            <input asp-for="passNew" type="password" class="form-control" id="passNew" name="passNew" placeholder="Write your new password" style="border-radius:10rem;">
+                                            <span asp-validation-for="passNew" class="text-danger"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Password Confirmation-->
+                                    <div class="form-group row">
+                                        <label asp-for="passConfirm" class="col-sm-2 col-form-label">Konfirmasi Password Baru</label>
+                                        <div class="col-sm-10">
+                                            <input asp-for="passConfirm" type="password" class="form-control" id="passConfirm" name="passConfirm" placeholder="Write your new password" style="border-radius:10rem;">
+                                            <span asp-validation-for="passConfirm" class="text-danger"></span>
+                                        </div>
+                                    </div>
+
+                                    <!--Button Submit-->
+                                    <input type="submit" value="Change" class="btn btn-primary btn-user btn-block" style="border-radius:10rem;" />
+
+                                </form>
+
+                                @*@if (Model.responseCode != "xx")
+                                    {
+                                        <p class="text-danger">@Model.responseMessage</p>
+                                    }*@
+
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="~/js/sb-admin-2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+    <script type="text/javascript">
+        function openSuccessModal(strMessage) {
+            var myDiv = document.getElementById("MyModalSuccessAlertBody");
+            myDiv.innerHTML = strMessage;
+            $('#myModalSuccess').modal('show');
+        }
+
+        function openErrorModal(strMessage) {
+            var myDiv = document.getElementById("MyModalErrorAlertBody");
+            myDiv.innerHTML = strMessage;
+            $('#myModalError').modal('show');
+        }
+
+        $(document).ready(function () {
+            var code = "@Model.responseCode";
+            var msg = "@Model.responseMessage" ;
+            if (code == "501" || code == "502" || code == "500") {
+                openErrorModal("Login Failed : " + msg + ", Harap perbarui password");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Login Failed',
+                    text: msg
+                });
+            }
+            //else if (code === "502")
+            //{
+            //        //openSuccessModal(msg).style.visibility = 'hidden';
+            //        openErrorModal("Login Failed : " + msg + "Harap perbarui password");
+            //        console.log("ERROR");
+            //        console.log(msg);
+            //        console.log(code);
+
+            //}
+        });
+    </script>
+
+
+
+    @*</div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>*@
+</body>
+
+</html>
+
+
+

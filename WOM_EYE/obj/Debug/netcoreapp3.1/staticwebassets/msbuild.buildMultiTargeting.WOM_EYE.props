@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\WOM_EYE.props" />
+</Project>

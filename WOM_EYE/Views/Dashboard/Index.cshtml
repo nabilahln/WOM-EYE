@@ -1,0 +1,571 @@
+﻿@model WOM_EYE.Models.Dashboard.DashboardModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Dashboard";
+    string idLabel = "";
+    string idValue = "";
+    string condition = "";
+    int limit = 0;
+    string dataTable = "dataTable";
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+</head>
+
+
+<h1><center>Welcome, @ViewBag.MUserName</center></h1>
+<br />
+<br />
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Filter Data By :</h6>
+    </div>
+    <div class="card-body">
+
+        <table class="table" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <td>
+                    <td>
+                        <p style="font-size:15px;">Sol Leader :</p>
+                    </td>
+                    <td>
+                        <form class="col-md-9">
+                            <div class="input-group">
+                                <select asp-for="SOL_LEADER" id="myInputSol2" name="SOL_LEADER" class="form-control bg-light border-0 small" aria-label="Search" aria-describedby="basic-addon2">
+                                    <option value=""> Select Sol Leader </option>
+                                    @foreach (var user in Model.ddlUser)
+                                        if (user.role == "P003")
+                                        {
+                                            <option value="@user.value">@user.value</option>
+                                        }
+                                </select>
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button">
+                                        <i class="fas fa-search fa-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th scope="col" class="text-dark">
+                            STATUS
+                        </th>
+                        <th scope="col" class="text-dark">TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @for (int i = 1; i < Model.listDashboard.Count; i++)
+                    {
+                        limit = 0;
+                        if (Model.listDashboard[i].GROUP_NAME == "ASSIGN")
+                        {
+                            idLabel = "#collapseAssign";
+                            idValue = "collapseAssign";
+                            condition = "ASSIGN";
+
+                            <tr>
+                                @*<td>#</td>*@
+                                <td>
+                                    <a class="text-dark" data-toggle="collapse" href="@idLabel" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                        @Html.DisplayFor(model => model.listDashboard[i].GROUP_NAME)
+                                    </a>
+                                </td>
+                                <td>@Html.DisplayFor(model => model.listDashboard[i].JUMLAH)</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3">
+                                    <div class="card card-body collapse" id="@idValue">
+                                        <div class="table-responsive">
+                                            <table style="width:100%;" id="dataTableAssign">
+                                                <thead style="text-align: center;">
+                                                    <tr>
+                                                        <th scope="col">SOL LEADER      </th>
+                                                        <th scope="col">NO PROJECT      </th>
+                                                        <th scope="col">STATUS          </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (Model.listProjectAssign.Count != null)
+                                                    {
+
+                                                        @for (int countProjectAssign = 0; countProjectAssign < Model.listProjectAssign.Count; countProjectAssign++)
+                                                        {
+
+
+
+                                                            <tr>
+                                                                <td>@Model.listProjectAssign[countProjectAssign].SOL_LEADER</td>
+                                                                <td>@Model.listProjectAssign[countProjectAssign].NO_PROJECT</td>
+                                                                <td>@Model.listProjectAssign[countProjectAssign].STATUS</td>
+                                                            </tr>
+                                                        }
+
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else if (Model.listDashboard[i].GROUP_NAME == "IN PROGRESS")
+                        {
+                            idLabel = "#collapseInProgress";
+                            idValue = "collapseInProgress";
+                            condition = "IN PROGRESS";
+
+                            <tr>
+                                @*<td>#</td>*@
+                                <td>
+                                    <a class="text-dark" data-toggle="collapse" href="@idLabel" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                        @Html.DisplayFor(model => model.listDashboard[i].GROUP_NAME)
+                                    </a>
+                                </td>
+                                <td>@Html.DisplayFor(model => model.listDashboard[i].JUMLAH)</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3">
+                                    <div class="card card-body collapse" id="@idValue">
+                                        <div class="table-responsive">
+                                            <table style="width:100%;" id="dataTableInProgress">
+                                                <thead style="text-align: center;">
+                                                    <tr>
+                                                        <th scope="col">SOL LEADER      </th>
+                                                        <th scope="col">NO PROJECT      </th>
+                                                        <th scope="col">STATUS          </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (Model.listProjectInProgress.Count != null)
+                                                    {
+
+                                                        @for (int countProjectAssign = 0; countProjectAssign < Model.listProjectInProgress.Count; countProjectAssign++)
+                                                        {
+
+
+
+                                                            <tr>
+                                                                <td>@Model.listProjectInProgress[countProjectAssign].SOL_LEADER</td>
+                                                                <td>@Model.listProjectInProgress[countProjectAssign].NO_PROJECT</td>
+                                                                <td>@Model.listProjectInProgress[countProjectAssign].STATUS</td>
+                                                            </tr>
+                                                        }
+
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else if (Model.listDashboard[i].GROUP_NAME == "DEPLOY")
+                        {
+                            idLabel = "#collapseDeploy";
+                            idValue = "collapseDeploy";
+                            condition = "DEPLOY";
+
+                            <tr>
+                                @*<td>#</td>*@
+                                <td>
+                                    <a class="text-dark" data-toggle="collapse" href="@idLabel" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                        @Html.DisplayFor(model => model.listDashboard[i].GROUP_NAME)
+                                    </a>
+                                </td>
+                                <td>@Html.DisplayFor(model => model.listDashboard[i].JUMLAH)</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3">
+                                    <div class="card card-body collapse" id="@idValue">
+                                        <div class="table-responsive">
+                                            <table style="width:100%;" id="dataTableDeploy">
+                                                <thead style="text-align: center;">
+                                                    <tr>
+                                                        <th scope="col">SOL LEADER      </th>
+                                                        <th scope="col">NO PROJECT      </th>
+                                                        <th scope="col">STATUS          </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (Model.listProjectDeploy.Count != null)
+                                                    {
+
+                                                        @for (int countProjectDeploy = 0; countProjectDeploy < Model.listProjectDeploy.Count; countProjectDeploy++)
+                                                        {
+
+
+
+                                                            <tr>
+                                                                <td>@Model.listProjectDeploy[countProjectDeploy].SOL_LEADER</td>
+                                                                <td>@Model.listProjectDeploy[countProjectDeploy].NO_PROJECT</td>
+                                                                <td>@Model.listProjectDeploy[countProjectDeploy].STATUS</td>
+                                                            </tr>
+                                                        }
+
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else if (Model.listDashboard[i].GROUP_NAME == "DONE")
+                        {
+                            idLabel = "#collapseDone";
+                            idValue = "collapseDone";
+                            condition = "DONE";
+
+                            <tr>
+                                @*<td>#</td>*@
+                                <td>
+                                    <a class="text-dark" data-toggle="collapse" href="@idLabel" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                        @Html.DisplayFor(model => model.listDashboard[i].GROUP_NAME)
+                                    </a>
+                                </td>
+                                <td>@Html.DisplayFor(model => model.listDashboard[i].JUMLAH)</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3">
+                                    <div class="card card-body collapse" id="@idValue">
+                                        <div class="table-responsive">
+                                            <table style="width:100%;" id="dataTableDone">
+                                                <thead style="text-align: center;">
+                                                    <tr>
+                                                        <th scope="col">SOL LEADER      </th>
+                                                        <th scope="col">NO PROJECT      </th>
+                                                        <th scope="col">STATUS          </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (Model.listProjectDone.Count != null)
+                                                    {
+
+                                                        @for (int countProjectDone = 0; countProjectDone < Model.listProjectDone.Count; countProjectDone++)
+                                                        {
+
+
+
+                                                            <tr>
+                                                                <td>@Model.listProjectDone[countProjectDone].SOL_LEADER</td>
+                                                                <td>@Model.listProjectDone[countProjectDone].NO_PROJECT</td>
+                                                                <td>@Model.listProjectDone[countProjectDone].STATUS</td>
+                                                            </tr>
+                                                        }
+
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else if (Model.listDashboard[i].GROUP_NAME == "DROP")
+                        {
+                            idLabel = "#collapseDrop";
+                            idValue = "collapseDrop";
+                            condition = "DROP";
+
+                            <tr>
+                                @*<td>#</td>*@
+                                <td>
+                                    <a class="text-dark" data-toggle="collapse" href="@idLabel" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                        @Html.DisplayFor(model => model.listDashboard[i].GROUP_NAME)
+                                    </a>
+                                </td>
+                                <td>@Html.DisplayFor(model => model.listDashboard[i].JUMLAH)</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3">
+                                    <div class="card card-body collapse" id="@idValue">
+                                        <div class="table-responsive">
+                                            <table style="width:100%;" id="dataTableDrop">
+                                                <thead style="text-align: center;">
+                                                    <tr>
+                                                        <th scope="col">SOL LEADER      </th>
+                                                        <th scope="col">NO PROJECT      </th>
+                                                        <th scope="col">STATUS          </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (Model.listProjectDrop.Count != null)
+                                                    {
+
+                                                        @for (int countProjectDrop = 0; countProjectDrop < Model.listProjectDrop.Count; countProjectDrop++)
+                                                        {
+
+
+
+                                                            <tr>
+                                                                <td>@Model.listProjectDrop[countProjectDrop].SOL_LEADER</td>
+                                                                <td>@Model.listProjectDrop[countProjectDrop].NO_PROJECT</td>
+                                                                <td>@Model.listProjectDrop[countProjectDrop].STATUS</td>
+                                                            </tr>
+                                                        }
+
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else if (Model.listDashboard[i].GROUP_NAME == "TBD")
+                        {
+                            idLabel = "#collapseTBD";
+                            idValue = "collapseTBD";
+                            condition = "TBD";
+
+                            <tr>
+                                @*<td>#</td>*@
+                                <td>
+                                    <a class="text-dark" data-toggle="collapse" href="@idLabel" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                        @Html.DisplayFor(model => model.listDashboard[i].GROUP_NAME)
+                                    </a>
+                                </td>
+                                <td>@Html.DisplayFor(model => model.listDashboard[i].JUMLAH)</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3">
+                                    <div class="card card-body collapse" id="@idValue">
+                                        <div class="table-responsive">
+                                            <table style="width:100%;" id="dataTableTBD">
+                                                <thead style="text-align: center;">
+                                                    <tr>
+                                                        <th scope="col">SOL LEADER      </th>
+                                                        <th scope="col">NO PROJECT      </th>
+                                                        <th scope="col">STATUS          </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (Model.listProjectTBD.Count != null)
+                                                    {
+
+                                                        @for (int countProjectTBD = 0; countProjectTBD < Model.listProjectTBD.Count; countProjectTBD++)
+                                                        {
+
+
+
+                                                            <tr>
+                                                                <td>@Model.listProjectTBD[countProjectTBD].SOL_LEADER</td>
+                                                                <td>@Model.listProjectTBD[countProjectTBD].NO_PROJECT</td>
+                                                                <td>@Model.listProjectTBD[countProjectTBD].STATUS</td>
+                                                            </tr>
+                                                        }
+
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else if (Model.listDashboard[i].GROUP_NAME == "HOLD")
+                        {
+                            idLabel = "#collapseHold";
+                            idValue = "collapseHold";
+                            condition = "HOLD";
+
+                            <tr>
+                                @*<td>#</td>*@
+                                <td>
+                                    <a class="text-dark" data-toggle="collapse" href="@idLabel" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                        @Html.DisplayFor(model => model.listDashboard[i].GROUP_NAME)
+                                    </a>
+                                </td>
+                                <td>@Html.DisplayFor(model => model.listDashboard[i].JUMLAH)</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3">
+                                    <div class="card card-body collapse" id="@idValue">
+                                        <div class="table-responsive">
+                                            <table style="width:100%;" id="dataTableHold">
+                                                <thead style="text-align: center;">
+                                                    <tr>
+                                                        <th scope="col">SOL LEADER      </th>
+                                                        <th scope="col">NO PROJECT      </th>
+                                                        <th scope="col">STATUS          </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (Model.listProjectHold.Count != null)
+                                                    {
+
+                                                        @for (int countProjectHold = 0; countProjectHold < Model.listProjectHold.Count; countProjectHold++)
+                                                        {
+
+
+
+                                                            <tr>
+                                                                <td>@Model.listProjectHold[countProjectHold].SOL_LEADER</td>
+                                                                <td>@Model.listProjectHold[countProjectHold].NO_PROJECT</td>
+                                                                <td>@Model.listProjectHold[countProjectHold].STATUS</td>
+                                                            </tr>
+                                                        }
+
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+
+
+
+
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="js/demo/datatables-demo.js"></script>
+
+@section Scripts{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#dataTableAssign').DataTable();
+            $('#dataTableInProgress').DataTable();
+            $('#dataTableHold').DataTable();
+            $('#dataTableTBD').DataTable();
+            $('#dataTableDone').DataTable();
+            $('#dataTableDeploy').DataTable();
+            $('#dataTableDrop').DataTable();
+        });
+
+        document.getElementById("myInputSol2").onchange = function () {
+            //console.log(solFilter.value);
+            var tableAssign = $('#dataTableAssign').DataTable();
+            var tableInProgress = $('#dataTableInProgress').DataTable();
+            var tableHold = $('#dataTableHold').DataTable();
+            var tableTBD = $('#dataTableTBD').DataTable();
+            var tableDone = $('#dataTableDone').DataTable();
+            var tableDeploy = $('#dataTableDeploy').DataTable();
+            var tableDrop = $('#dataTableDrop').DataTable();
+
+            var val = $.fn.dataTable.util.escapeRegex(
+                $(this).val()
+            );
+            var valAssign = $.fn.dataTable.util.escapeRegex(val);
+            var valInProgress = $.fn.dataTable.util.escapeRegex(val);
+            var valHold = $.fn.dataTable.util.escapeRegex(val);
+            var valTBD = $.fn.dataTable.util.escapeRegex(val);
+            var valDone = $.fn.dataTable.util.escapeRegex(val);
+            var valDeploy = $.fn.dataTable.util.escapeRegex(val);
+            var valDrop = $.fn.dataTable.util.escapeRegex(val);
+
+
+            tableAssign.column(0).search(valAssign ? '^' + valAssign + '$' : '', true, false).draw();
+            tableInProgress.column(0).search(valInProgress ? '^' + valInProgress + '$' : '', true, false).draw();
+            tableHold.column(0).search(valHold ? '^' + valHold + '$' : '', true, false).draw();
+            tableTBD.column(0).search(valTBD ? '^' + valTBD + '$' : '', true, false).draw();
+            tableDone.column(0).search(valDone ? '^' + valDone + '$' : '', true, false).draw();
+            tableDeploy.column(0).search(valDeploy ? '^' + valDeploy + '$' : '', true, false).draw();
+            tableDrop.column(0).search(valDrop ? '^' + valDrop + '$' : '', true, false).draw();
+
+            console.log(val);
+            //document.cookie = "myInputSol=" + value;
+        }
+
+       
+
+        function openSuccessModal(strMessage) {
+            var myDiv = document.getElementById("MyModalSuccessAlertBody");
+            myDiv.innerHTML = strMessage;
+            $('#myModalSuccess').modal('show');
+        }
+
+        function openErrorModal(strMessage) {
+            var myDiv = document.getElementById("MyModalErrorAlertBody");
+            myDiv.innerHTML = strMessage;
+            $('#myModalError').modal('show');
+        }
+        </script>
+        <script>
+        $(document).ready(function () {
+            var code = "@TempData["MyResponseCode"]";
+            var msg = "@TempData["MyResponseMessage"]";
+            if (code == "200") {
+                //openSuccessModal(msg);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: msg
+                });
+            }
+            else if (code == "404") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed',
+                    text: msg
+                });
+            }
+            else {
+                if (@TempData["MyResponseCode"] != null && @TempData["MyResponseCode"] != "xx")
+
+                //openErrorModal("Update Failed: " + msg);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed',
+                        text: msg
+                    });
+            }
+        });
+    </script>
+}
+
+
+<!-- Page level plugins -->
+
+
+
+
+</html>

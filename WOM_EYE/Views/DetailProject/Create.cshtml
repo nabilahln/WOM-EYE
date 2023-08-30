@@ -1,0 +1,117 @@
+﻿@model WOM_EYE.Models.Projects.DetailProjectModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h4>INSERT DATA DETAIL PROJECT</h4>
+<hr />
+<div class="row">
+    <div class="col-lg-12">
+        <form asp-action="CreateValidation" asp-controller="DetailProject" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="T_WOMEYE_PROJECT_UID" class="form-control" type="hidden"/>
+                <input asp-for="USR_CRT" class="form-control" type="hidden"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="TAHAP" class="control-label"></label>
+                <select asp-for="TAHAP" id="TAHAP" name="TAHAP" class="form-control" style="border-radius:10rem;">
+                    <option value=""> Select Tahap </option>
+                    @foreach (var status in Model.ddlTahap)
+                    {
+                        <option value="@status.key">@status.value</option>
+                    }
+                </select>
+                <span asp-validation-for="TAHAP" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="START_DT" class="control-label"></label>
+                @Html.TextBoxFor(x => x.START_DT, "{0:yyyy-MM-dd}", new { @class = "form-control form-control-user", type = "date", style = "border-radius:10rem;" })
+                <span asp-validation-for="START_DT" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="END_DT" class="control-label"></label>
+                @Html.TextBoxFor(x => x.END_DT, "{0:yyyy-MM-dd}", new { @class = "form-control form-control-user", type = "date", style = "border-radius:10rem;" })
+                <span asp-validation-for="END_DT" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="REALIZATION_START_DT" class="control-label"></label>
+                @Html.TextBoxFor(x => x.REALIZATION_START_DT, "{0:yyyy-MM-dd}", new { @class = "form-control form-control-user", type = "date", style = "border-radius:10rem;" })
+                <span asp-validation-for="REALIZATION_START_DT" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="REALIZATION_END_DT" class="control-label"></label>
+                @Html.TextBoxFor(x => x.REALIZATION_END_DT, "{0:yyyy-MM-dd}", new { @class = "form-control form-control-user", type = "date", style = "border-radius:10rem;" })
+                <span asp-validation-for="REALIZATION_END_DT" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DOKUMEN" class="control-label"></label>
+                <input asp-for="DOKUMEN" class="form-control" style = "border-radius:10rem;"/>
+                <span asp-validation-for="DOKUMEN" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="STATUS_PROJECT" class="control-label"></label>
+                <select asp-for="STATUS_PROJECT" id="STATUS_PROJECT" name="STATUS_PROJECT" class="form-control" style="border-radius:10rem;">
+                    <option value=""> Select Status </option>
+                    @foreach (var status in Model.ddlStatus)
+                    {
+                        /// <option value="@status.key">@status.value</option>
+                        @if (status.value == "PROGRESS" || status.value == "DONE" || status.value == "HOLD")
+                        {
+                            if (status.key == Model.STATUS_PROJECT)
+                            {
+                                <option value="@status.key" selected>@status.value</option>
+                            }
+                            else
+                            {
+                                <option value="@status.key">@status.value</option>
+                            }
+                        }
+                    }
+                    }
+                </select>
+                <span asp-validation-for="STATUS_PROJECT" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="KETERANGAN" class="control-label"></label>
+                <input asp-for="KETERANGAN" class="form-control" style = "border-radius:10rem;"/>
+                <span asp-validation-for="KETERANGAN" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary btn-block" style = "border-radius:10rem;"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/vendor/jquery/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+            var code = "@Model.responseCodeProject";
+            var msg = "@Model.responseMessageProject";
+            if (code === "200") {
+                //openSuccessModal(msg);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: msg
+                });
+            } else if( code === "500" )
+            {
+                    //openErrorModal("Insert Failed: " + msg);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Insert Failed',
+                    text: msg
+                });
+
+            }
+        });
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

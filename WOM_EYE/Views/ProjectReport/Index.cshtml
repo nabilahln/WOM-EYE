@@ -1,0 +1,302 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Projects Reporting";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<!--#REGION FORM SEARCH SOL LEADER, NO PROJECT, STATUS-->
+
+<div class="card shadow mb-3">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Filter Data By :</h6>
+    </div>
+    <form id="filterForm" name="filterForm">
+
+        <!-- Solution Leader & Project Owner-->
+        <div class="form-row mt-2 ml-2 mr-2 mb-2">
+            <div class="form-group col-md-6">
+                <label style="font-size:15px;" for="inputSolutionLeader">Solution Leader</label>
+                @if (ViewBag.UserLogin.USER_POSITION != "IT Solution Leader")
+                {
+                    <select style="font-size:15px;" id="inputSolutionLeader" name="inputSolutionLeader" class="form-control">
+                        <option value=""> Select Sol Leader </option>
+                        @foreach (var user in ViewBag.ddlUser)
+                            if (user.role == "P003")
+                            {
+                                <option value="@user.value">@user.value</option>
+                            }
+                    </select>
+                }
+                else
+                {
+                    <input style="font-size:15px;" type="text" class="form-control" id="inputSolutionLeader" name="inputSolutionLeader" value="@ViewBag.UserLogin.USER_NAME" readonly>
+                }
+            </div>
+            <div class="form-group col-md-6">
+                <label style="font-size:15px;" for="inputPassword4">Project Owner</label>
+                <input type="text" class="form-control" placeholder="Search Project Owner" id="inputProjectOwner" name="inputProjectOwner">
+            </div>
+        </div>
+
+        <!-- Programmer & Function Analyst -->
+        <div class="form-row  mt-2 ml-2 mr-2 mb-2">
+            <div class="form-group col-md-6">
+                <label style="font-size:15px;" for="inputProgrammer">Programmer</label>
+                @if (ViewBag.UserLogin.USER_POSITION == "Programmer / Function Analyst")
+                {
+                    <input style="font-size:15px;" type="text" class="form-control" id="inputProgrammer" name="inputProgrammer" value="@ViewBag.UserLogin.USER_NAME" readonly>
+                }
+                else if (ViewBag.UserLogin.USER_POSITION != "Programmer")
+                {
+                    <input style="font-size:15px;" type="text" class="form-control" placeholder="Search Programmer" id="inputProgrammer" name="inputProgrammer">
+                }
+                else
+                {
+                    <input style="font-size:15px;" type="text" class="form-control" id="inputProgrammer" name="inputProgrammer" value="@ViewBag.UserLogin.USER_NAME" readonly>
+                }
+
+            </div>
+            <div class="form-group col-md-6">
+                <label style="font-size:15px;" for="inputPassword4">Function Analyst</label>
+                @if (ViewBag.UserLogin.USER_POSITION == "Programmer / Function Analyst")
+                {
+                    <input style="font-size:15px;" type="text" class="form-control" id="inputFunctionAnalyst" name="inputFunctionAnalyst" value="@ViewBag.UserLogin.USER_NAME" readonly>
+                }
+                else if (ViewBag.UserLogin.USER_POSITION != "Function Analyst")
+                {
+                    <input style="font-size:15px;" type="text" class="form-control" placeholder="Search Function Analyst" id="inputFunctionAnalyst" name="inputFunctionAnalyst">
+                }
+                else
+                {
+                    <input style="font-size:15px;" type="text" class="form-control" id="inputFunctionAnalyst" name="inputFunctionAnalyst" value="@ViewBag.UserLogin.USER_NAME" readonly>
+                }
+
+            </div>
+        </div>
+
+        <!-- No Project, Jenis Project & Status Project-->
+        <div class="form-row  mt-2 ml-2 mr-2 mb-2">
+            <div class="form-group col-md-6">
+                <label style="font-size:15px;" for="inputNoProject">Number of Project</label>
+                <input type="text" class="form-control" placeholder="Search No of Project" id="inputNoProject" name="inputNoProject">
+            </div>
+
+            <div class="form-group col-md-3">
+                <label style="font-size:15px;" for="inputJenisProject">Project Type</label>
+                <select id="inputJenisProject" name="inputJenisProject" class="form-control">
+                    <option value=""> Select Project Type </option>
+                    @foreach (var type in ViewBag.ddlJenis)
+                    {
+                        <option value="@type.key">@type.value</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label style="font-size:15px;" for="inputStatus">Project Status</label>
+                <select id="inputStatus" name="inputStatus" class="form-control">
+                    <option value=""> Select Project Status </option>
+                    @foreach (var status in ViewBag.ddlStatus)
+                    {
+                        <option value="@status.key">@status.value</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <!-- Start Date & End Date-->
+        <div class="form-row  mt-2 ml-2 mr-2 mb-2">
+            <div class="form-group col-md-6">
+                <label style="font-size:15px;" for="inputStartDate">Start Date</label>
+                <input id="inputStartDate" name="inputStartDate" type="date" class="form-control" />
+            </div>
+            <div class="form-group col-md-6">
+                <label style="font-size:15px;" for="inputEndDate">End Date</label>
+                <input id="inputEndDate" name="inputEndDate" type="date" class="form-control" />
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-icon-split " style="margin:20px;">
+            <span class="icon text-white-50">
+                <i class="fas fa-solid fa-eye"></i>
+            </span>
+
+            <span class="text">Preview Data</span>
+        </button>
+
+    </form>
+
+    <form id="downloadForm" name="downloadForm" asp-area="" asp-controller="ProjectReport" asp-action="GenerateExcelAllProjects" method="post" style="visibility:hidden">
+        <input type="hidden" name="downloadSolutionLeader" id="downloadSolutionLeader" value="" />
+        <input type="hidden" name="downloadProjectOwner" id="downloadProjectOwner" value="" />
+        <input type="hidden" name="downloadFunctionAnalyst" id="downloadFunctionAnalyst" value="" />
+        <input type="hidden" name="downloadProgrammer" id="downloadProgrammer" value="" />
+        <input type="hidden" name="downloadNoProject" id="downloadNoProject" value="" />
+        <input type="hidden" name="downloadJenisProject" id="downloadJenisProject" value="" />
+        <input type="hidden" name="downloadStatus" id="downloadStatus" value="" />
+        <input type="hidden" name="downloadStartDate" id="downloadStartDate" value="" />
+        <input type="hidden" name="downloadEndDate" id="downloadEndDate" value="" />
+        <button type="submit" class="btn btn-success btn-icon-split" style="margin:20px;">
+            <span class="icon text-white-50">
+                <i class="fas fa-solid fa-download"></i>
+            </span>
+            <span class="text">Download Report</span>
+        </button>
+    </form>
+</div>
+
+<!--END REGION-->
+
+
+<div class="card shadow mb-3">
+    <div class="card-body" style="font-size: 16px; ">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="projectTable" width="100%" cellspacing="0">
+                <thead style="text-align: center; ">
+                    <tr>
+                        <th scope="col" style="white-space: nowrap;">Solution Leader</th>
+                        <th scope="col" style="white-space: nowrap;">Project Owner</th>
+                        <th scope="col" style="white-space: nowrap;">Project Type</th>
+                        <th scope="col" style="white-space: nowrap;">Number of Project</th>
+                        <th scope="col" style="white-space: nowrap;">Description</th>
+                        <th scope="col" style="white-space: nowrap;">Function Analyst</th>
+                        <th scope="col" style="white-space: nowrap;">Programmer</th>
+                        <th scope="col" style="white-space: nowrap;">Status</th>
+                        <th scope="col" style="white-space: nowrap;">Notes</th>
+                        <th scope="col" style="white-space: nowrap;">Date Create</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="~/vendor/jquery/jquery.min.js"></script>
+
+<script>
+
+    var projects = '';
+    var formFilter = document.getElementById("filterForm");
+    var downloadForm = document.getElementById("downloadForm");
+
+    // Preview variable
+    var inputSolutionLeader = '';
+    var inputProjectOwner = '';
+    var inputFunctionAnalyst = '';
+    var inputProgrammer = '';
+    var inputNoProject = '';
+    var inputJenisProject = '';
+    var inputStatus = '';
+    var inputStartDate = '';
+    var inputEndDate = '';
+
+    // Download const
+    const downloadSolutionLeader = document.getElementById("downloadSolutionLeader");
+    const downloadProjectOwner = document.getElementById("downloadProjectOwner");
+    const downloadFunctionAnalyst = document.getElementById("downloadFunctionAnalyst");
+    const downloadProgrammer = document.getElementById("downloadProgrammer");
+    const downloadNoProject = document.getElementById("downloadNoProject");
+    const downloadJenisProject = document.getElementById("downloadJenisProject");
+    const downloadStatus = document.getElementById("downloadStatus");
+    const downloadStartDate = document.getElementById("downloadStartDate");
+    const downloadEndDate = document.getElementById("downloadEndDate");
+
+    formFilter.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        downloadForm.style.visibility = 'visible';
+
+        inputSolutionLeader = document.getElementById("inputSolutionLeader").value === "" ? '%%' : document.getElementById("inputSolutionLeader").value;
+        inputProjectOwner = document.getElementById("inputProjectOwner").value === "" ? '%%' : '%' + document.getElementById("inputProjectOwner").value + '%';
+        inputFunctionAnalyst = document.getElementById("inputFunctionAnalyst").value === "" ? '%%' : '%' + document.getElementById("inputFunctionAnalyst").value + '%';
+        inputProgrammer = document.getElementById("inputProgrammer").value === "" ? '%%' : '%' + document.getElementById("inputProgrammer").value + '%';
+        inputNoProject = document.getElementById("inputNoProject").value === "" ? '%%' : '%' + document.getElementById("inputNoProject").value + '%';
+        inputJenisProject = document.getElementById("inputJenisProject").value === "" ? '%%' : document.getElementById("inputJenisProject").value;
+        inputStatus = document.getElementById("inputStatus").value === "" ? '%%' : document.getElementById("inputStatus").value;
+        inputStartDate = document.getElementById("inputStartDate").value === "" ? '1900-01-01' : document.getElementById("inputStartDate").value;
+        inputEndDate = document.getElementById("inputEndDate").value === "" ? '9999-12-31' : document.getElementById("inputEndDate").value;
+
+        if (inputStartDate >= inputEndDate) {
+            //alert("Start Date must be less than the End Date");
+            //openWarningModal("Non-Authoritative Information: " + msg);
+            Swal.fire({
+                icon: 'warning',
+                title: 'Warning',
+                text: 'Start Date must be less than the End Date'
+            });
+            downloadForm.style.visibility = 'hidden';
+            return; // menghentikan fungsi untuk mencegah pengiriman form
+        }
+
+        downloadSolutionLeader.value = inputSolutionLeader;
+        downloadProjectOwner.value = inputProjectOwner;
+        downloadFunctionAnalyst.value = inputFunctionAnalyst;
+        downloadProgrammer.value = inputProgrammer;
+        downloadNoProject.value = inputNoProject;
+        downloadJenisProject.value = inputJenisProject;
+        downloadStatus.value = inputStatus;
+        downloadStartDate.value = inputStartDate;
+        downloadEndDate.value = inputEndDate;
+
+
+        var dataFromInput = { inputSolutionLeader, inputProjectOwner, inputFunctionAnalyst, inputProgrammer, inputNoProject, inputJenisProject, inputStatus, inputStartDate, inputEndDate };
+
+        console.log(dataFromInput);
+
+        $.ajax({
+            url: "@Url.Action("PreviewData")",
+            type: "post",
+            data: {
+                solutionLeader: inputSolutionLeader,
+                projectOwner: inputProjectOwner,
+                functionAnalyst: inputFunctionAnalyst,
+                programmer: inputProgrammer,
+                noProject: inputNoProject,
+                jenisProject: inputJenisProject,
+                status: inputStatus,
+                startDate: inputStartDate,
+                endDate: inputEndDate
+            },
+            success: function (response) {
+                console.log(response);
+                projects = response.data;
+                var tbody = $("#projectTable tbody");
+
+                tbody.empty();
+
+                $.each(projects, function (index, project) {
+                    var tr = $("<tr></tr>");
+
+                    tr.append("<td>" + project.soL_LEADER + "</td>");
+                    tr.append("<td>" + project.projecT_LEADER + "</td>");
+                    tr.append("<td>" + project.jeniS_PROJECT + "</td>");
+                    tr.append("<td>" + project.nO_PROJECT + "</td>");
+                    tr.append("<td>" + project.deskripsi + "</td>");
+                    tr.append("<td>" + project.functioN_ANALYST + "</td>");
+                    tr.append("<td>" + project.programmer + "</td>");
+                    tr.append("<td>" + project.status + "</td>");
+                    tr.append("<td>" + project.catatan + "</td>");
+                    tr.append("<td>" + project.dtM_CRT + "</td>");
+                    //tr.append("<td>" + project.grouP_NAME + "</td>");
+
+                    tbody.append(tr);
+                });
+            }
+        })
+
+
+    });
+
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
